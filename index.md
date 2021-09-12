@@ -41,3 +41,35 @@ Experiments
 作者在补充材料中，添加了在RefCOCO数据集上的实验。
 从表2中看出，本文方法与Two-stage方法的表现相差不大，甚至要低一点。这是因为Two-stage的检测模型都是以COCO数据集为预训练模型，而RefCOCO数据集是COCO数据集的一个子集。  Two-stage方法与RefCOCO数据集有很强的相关性。从表3中看出，Mask RCNN的检测结果作为候选区域以及Mask RCNN的RPN层输出的Proposals作为候选区域的Hit Rate非常高，从而也更加证明了本文方法在多个数据集上的优越表现与良好的泛化性。
 ```
+```
+<Improving One-stage Visual Grounding by Recursive Sub-query Construction>ECCV2020
+Introduction
+本文在FAOA论文所提出的One-Stage方法基础上进行了改进，作者认为现在的one-stage方法忽略了对Quary的建模，对整个Quary进行编码得到一个编码向量，这种方法在处理长句子或者负载句子时表现很差。这是因为这种建模方法会增加Quary的模糊性使得模型会关注一些不重要的单词而忽略重要单词。因此，作者提出了一种递归结构，每次递归产生一个sub-quary，并利用此sub-quary去调整提取的图像特征(此过程也是多模态融合)，并使用最后一次递归后调整的text-visual特征已经包含完整的目标相关信息并作为最终的多模态特征，进行Bbox的预测。
+Approach
+递归结构主要由Sub-query Learner和Sub-query Modulation两部分组成。Sub-query Learner是在每次递归时产生sub-quary。Sub-query Modulation是利用sub-quary对上一次递归产生的text-visual进行调整。
+Sub-query Learner
+由语言编码器对长度为n的Quary进行编码得到S={s1 s2 …sn},并且每次递归都会产生不同的一组长度为n的单词分数向量α(k)={a1,a2…an}（可以理解对整句话中每个单词的注意力程度）。每次递归除了输入单词特征S,上一次递归产生的text-visual特征Vk-1也输入到Sub-query Learner中从而避免过度聚焦某一个特定单词。α(k)计算方式如下.  
+Wa0, ba0, Wa1, ba1是网络可学习参数，α(k)也就是产生的sub-quary
+h(k)包含了先前单词历史信息,计算方式如下，其中第k次递归时的hk包含了先前k-1次的单词分数信息，也就是累加前k-1次的单词得分α。
+Sub-query Learner在每一次递归中应该关注不同的单词且在递归结束后，大部分单词应该被学习过，因此作者加入了两个正则项来保证这一准则。
+其中，Ldiv避免一个单词被关注多次从而强制加入多样性，Lcover使得模型可以查看所有单词从而提高覆盖范围。
+Sub-query Modulation
+在每一轮递归中，Sub-query Learner通过输出α(k)的方式产生sub-quary,然后生成sub-quary的特征q(k)送入到Sub-query Modulation。Sub-query Modulation使用  
+q(k)去调整text-visual特征v(k-1)。
+```
+```
+《MAttNet: Modular Attention Network for Referring Expression Comprehension》
+Introduction
+MAttNet为Two-Stage方法，即首先利用检测网络提取出图像上存在的objects的region，再从这些objests中选出与expressions描述最详尽的object作为referent Bbox。以往的Two-Stage方法中对于language主要是整体处理，而不关心各个成分的作用，作者将句子分割成不同的module（subject, location, relationship)，并根据不同的module对object feature进行不同的处理。Subject处理类别名称，颜色和其他属性，location模块处理绝对位置和（某些）相对位置，relationship模块处理其他object与subject-object的关系。
+Approach
+Language Attention Network
+Language Attention Network主要有两种作用，首先是采用soft-parse的方法对Expression进行解析，从而得到句子的subject、loca、relat三个部分。另外还可以计算出Expression中三个部分的贡献程度(作者考虑了不是完整主谓宾的Expression)。
+Subject Module
+Subject Module同样有两种作用，首先是对subject的属性预测，帮助模型理解候选目标的外观特征表示，属性可以很好的区分同一类别的不同object。让visual feature和属性+类别描述提前建立一种联系，可以让后面计算score时的module学习起来更加容易。作者使用template-parser来获取训练集中expressions中的颜色等通用属性单词并删除低频单词。在训练时，只有Expression中的属性单词才会参与预测。第二点，Subject Module可以在phrase的引导下来对subject的相关区域进行关注，使用phase attention模块来增强vision feature，增加不同object分数的区分度，作者将其称为’in-box’注意力。Matching Function则是分别计算候选区域与Expression中三个模块的相似度。
+Location Module
+作者发现有41%和36%的Expression包含明确的位置单词在Refcoco和Refcocog数据集中。因此作者对候选框的绝对位置信息编码成5D向量，作者不仅考虑了候选框的绝对位置，还选取了5个同类别的五个object，来把相对位置也考虑进来；因为这种关系描述一般是“second left person”，所以在relationship模块是没办法考虑到这种关系的，两种位置组合再一起与Expression中的loc部分计算相似度
+Experiments
+文章中的各个点的对比基本都有涉及到,但relationship module对模型的准确率提升很小，基本都在1%以下。
+我个人认为，提升较小的原因是数据集较为简单，大部分expression仅凭subject及localization就可以确定object；如果有较为复杂的数据集，应该可以验证这个看法。
+作者relationship模块设计不是很完美，仅仅考虑了距离最近的五个object中最重要的那个。相当于已经假设关系中涉及的object都在自己的附近（数据集中大部分确实如此）。
+```
