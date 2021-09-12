@@ -1,33 +1,22 @@
-## Welcome to Oliver's GitHub Pages
+# Welcome to Oliver's GitHub Pages
 
 
 
-### Visual Grounding
-```markdown
-## 任务描述
+## Visual Grounding
+
+### 任务描述
 基于自然语言描述的查询文本在图像中框选出最佳匹配的图像区域。
 
-## 应用场景
+### 应用场景
 1、可应用于基于文本的对话式问答中，嵌入在移动端或者PC中并作为人机交互的一种方式。
 2、提供了图文互搜的一种新方法。
 
-- Bulleted
-- List
+### One-Stage当前存在的问题
+1、	由于采用的是one-stage检测网络框架，在检测精度上受到到限制，在面对复杂背景、小目标时表现较差。
+2、	针对图像空间特征的提取，空间特征的建模不足，对视觉特征的补充还不够。当前的想法是场景图可以对图像进行良好的空间特征提取，但是需要目标的区域特征作为图节点的特征，这种方法可以只能用在 Two-stage的方法中，因为One-stage方法是在最后才会产生候选区域。
+3、	对文本中的属性词、关系词的无法准确理解，这也是造成在最终指代相关目标时错误的原因。对于同类别的不同属性、不同相关信息的目标时，错误率很高。
+4、	在图像与文本特征融合过程中，没有充分考虑各自的上下文信息，以及两者之间信息之间的交互，以一种动态的方式来进行融合特征，而不是简单的拼接或者元素相乘。
+5、	对于图像与文本的融合后的多模态特征包含很多冗余特征，关键在于怎么再次使用文本特征对融合后的多模态特征进行优化，从而突出相关目标并抑制无关目标。
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/OliverHuang1220/huangqiang.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
