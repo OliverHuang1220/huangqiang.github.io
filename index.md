@@ -8,11 +8,14 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
-Syntax highlighted code block
+# Visual Grounding
 
-# Header 1
-## Header 2
-### Header 3
+## 任务描述
+基于自然语言描述的查询文本在图像中框选出最佳匹配的图像区域。
+
+## 应用场景
+1、可应用于基于文本的对话式问答中，嵌入在移动端或者PC中并作为人机交互的一种方式。
+2、提供了图文互搜的一种新方法。
 
 - Bulleted
 - List
