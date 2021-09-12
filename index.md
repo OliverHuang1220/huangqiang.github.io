@@ -3,13 +3,11 @@
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+### Visual Grounding
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
-# Visual Grounding
-
 ## 任务描述
 基于自然语言描述的查询文本在图像中框选出最佳匹配的图像区域。
 
